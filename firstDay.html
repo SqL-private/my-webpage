@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>道歉小网页</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        h1 { color: #ff4d4d; }
+        #sweet-text {
+            color: #ff4d4d;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .heart { font-size: 50px; color: red; animation: heartbeat 1s infinite; }
+        .btn { padding: 10px 20px; font-size: 16px; background: pink; border: none; cursor: pointer; border-radius: 5px; margin-top: 20px; }
+        .hidden { display: none; }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            display: none;
+            z-index: 1000;
+        }
+        .popup img {
+            width: 200px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        .popup button {
+            margin: 10px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .close-btn {
+            background: gray;
+            color: white;
+        }
+        .good-btn {
+            background: lightgreen;
+        }
+        .bad-btn {
+            background: lightcoral;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .confession-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 16px;
+            color: #000000;
+            font-weight: bold;
+            z-index: 3000;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>💖 亲爱的夫人，早上好 💖</h1>
+    <p id="sweet-text">美好的一天开始啦💌</p>
+    <button class="btn" onclick="showPopup()">点我！(第一次做，还请担待，嘿嘿。)</button>
+    <p class="heart">❤️</p>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <p style="font-size: 24px; color: lightsalmon; font-weight: bold;">昨晚睡得好吗？😴</p>
+        <button class="good-btn" onclick="chooseOption('good')">好 😊</button>
+        <button class="bad-btn" onclick="chooseOption('bad')">不好 😢</button>
+        <br>
+        <img id="popup-image" class="hidden">
+        <br>
+        <button class="close-btn" onclick="closePopup()">X 关闭</button>
+    </div>
+
+    <div class="popup" id="second-popup">
+        <p style="font-size: 24px; color: lightsalmon; font-weight: bold;">今天的心情如何？😊</p>
+        <button class="good-btn" onclick="chooseMood('happy')">平常心 😄</button>
+        <button class="bad-btn" onclick="chooseMood('sad')">有点点不开心 😢</button>
+        <br>
+        <img id="mood-image" class="hidden">
+        <br>
+        <button class="close-btn" onclick="closeSecondPopup()">X 关闭</button>
+    </div>
+
+    <div id="confessionPopup" class="confession-popup">亲爱的夫人，愚妻愧疚于心，深知言辞不当，常使汝心生忧虑。
+        偶尔自觉应言少而行，因言多易失，未能尽述心意，致使汝误解。
+        然未来之事，愿与汝共商，且行且思，岁月绵长，情话未完，爱意无尽。
+        愿我常伴汝侧，守护汝安，心不忍见汝独处一隅，电话彼端泪痕让我心痛。
+        愿将我所有深情，倾尽于汝，令汝得知我无尽的爱与温柔。
+        "With every moment that passes, my love for you grows deeper, and I will cherish you forever, for you are my heart's eternal home." 💖</div>
+
+    <script>
+        function showPopup() {
+            document.getElementById("popup").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+
+            // 在关闭第一个弹窗后，延迟显示第二个弹窗
+            setTimeout(function() {
+                showSecondPopup();
+            }, 100); // 延迟500毫秒，确保第一个弹窗完全关闭
+        }
+
+        function showSecondPopup() {
+            document.getElementById("second-popup").style.display = "block";
+        }
+
+        function closeSecondPopup() {
+            document.getElementById("second-popup").style.display = "none";
+
+            // 显示表白弹窗
+            document.getElementById("confessionPopup").style.display = "block";
+        }
+
+        function chooseOption(option) {
+            let img = document.getElementById("popup-image");
+            img.classList.remove("hidden");  // 显示图片
+
+            // 根据选择显示图片
+            if (option === "good") {
+                img.src = "good.jfif";
+                img.alt = "开心的照片";
+            } else {
+                img.src = "shiqinhhh.jpg";
+                img.alt = "不好的照片";
+            }
+        }
+
+        function chooseMood(mood) {
+            let img = document.getElementById("mood-image");
+            img.classList.remove("hidden");  // 显示图片
+
+            // 根据选择显示图片
+            if (mood === "happy") {
+                img.src = "hhh.png";
+                img.alt = "开心的照片";
+            } else {
+                img.src = "momot.png";
+                img.alt = "不开心的照片";
+            }
+        }
+    </script>
+</body>
+</html>
